@@ -43,9 +43,11 @@ That handler (which handles opening your browser and going to different sites) w
 1. Why doesn't the tool automatically ask to escalate?
 
 Python doesn't work very well when doing that and plus, it's a potential security risk.
+
 2. What other features do you plan on implementing?
 
 * A list of all available protocol handlers.
 
 3. Why Python?
+
 It was way easier than any other tool out there. PyInstaller automatically created a binary. It's seamless.
