@@ -1,6 +1,5 @@
 import ctypes, sys, os
 import click
-from utils.windows_registry import add_protocol_handler, delete_protocol_handler
 from utils.linux_desktop_entry import add_protocol_handler_linux, delete_protocol_handler_linux
 
 def is_admin():
@@ -15,6 +14,9 @@ def is_admin():
     
     return is_root
 
+def is_windows():
+    return os.name == "nt"
+
 @click.group()
 def cli():
     pass
@@ -25,14 +27,13 @@ def cli():
 def add(name, path):
     """Add a new protocol handler to the registry"""
     if is_admin():
-        if os.name == 'nt':
+        if is_windows():
+            from utils.windows_registry import add_protocol_handler
             add_protocol_handler(f"{name}", f"{path}")
             click.echo(f"Added {name} to the registry.")
-        elif os.name == 'posix':
+        else:
             add_protocol_handler_linux(f"{name}", f"{path}")
             click.echo(f"Added {name} to the local applications folder.")
-        else:
-            pass
     else:
         print("You must run this program as an administrator or root.")
         sys.exit(1)
@@ -42,14 +43,13 @@ def add(name, path):
 def delete(name):
     """Delete a protocol handler from the registry"""
     if is_admin():
-        if os.name == 'nt':
+        if is_windows():
+            from utils.windows_registry import delete_protocol_handler
             delete_protocol_handler(f"{name}")
             click.echo(f"Deleted {name} from the registry.")
-        elif os.name == 'posix':
+        else:
             delete_protocol_handler_linux(f"{name}")
             click.echo(f"Deleted {name} from the local applications folder.")
-        else:
-            pass
     else:
         print("You must run this program as an administrator or root.")
         sys.exit(1)
